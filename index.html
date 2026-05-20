@@ -7,9 +7,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="年休管理"/>
   <meta name="mobile-web-app-capable" content="yes"/>
-  <meta name="theme-color" content="#f8fafc"/>
-  <link rel="apple-touch-icon" href="icon-192.png"/>
-  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#6366f1"/>
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%20180%22%3E%3Crect%20width%3D%22180%22%20height%3D%22180%22%20rx%3D%2234%22%20fill%3D%22%238DB84C%22%2F%3E%3Ctext%20x%3D%2290%22%20y%3D%22128%22%20font-size%3D%22108%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%3E%F0%9F%97%93%3C%2Ftext%3E%3C%2Fsvg%3E"/>
   <title>年休管理</title>
   <style>
     @keyframes tab-bounce {
@@ -53,35 +52,8 @@
     body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
     select option{background:var(--select-bg,#f8fafc);color:var(--select-color,#1e293b)}
   </style>
-  <script>
-    /* チラつき防止: Reactより前にダーク背景を確定させる */
-    (function(){
-      var dark = localStorage.getItem('nenkyuu_dark') === '1';
-      var bg   = dark ? '#0f172a' : '#f8fafc';
-      var r = document.documentElement.style;
-      r.setProperty('--bg-root', bg);
-      /* body未生成なのでhtml要素に直接背景を当てる */
-      document.documentElement.style.background = bg;
-    })();
-  </script>
 </head>
 <body>
-  <!-- ヘッダー領域をReact描画前に同色で予約 -->
-  <script>
-    (function(){
-      var dark = localStorage.getItem('nenkyuu_dark') === '1';
-      var bg   = dark ? '#0f172a' : '#f8fafc';
-      document.body.style.background = bg;
-      /* ヘッダー高さ分のプレースホルダーdivを差し込む */
-      var ph = document.createElement('div');
-      ph.id  = 'header-ph';
-      ph.style.cssText = 'position:sticky;top:0;z-index:100;height:60px;'
-        + 'background:' + (dark ? 'rgba(15,23,42,0.85)' : 'rgba(241,245,249,0.92)') + ';'
-        + 'border-bottom:' + (dark ? '1px solid rgba(99,102,241,0.3)' : '1px solid rgba(0,0,0,0.09)') + ';'
-        + 'backdrop-filter:blur(12px);';
-      document.body.appendChild(ph);
-    })();
-  </script>
   <div id="root"></div>
 
   <!-- React 18 + ReactDOM (CDN) -->
@@ -158,7 +130,7 @@ const THEMES = {
     tabAnimFrom: "#94a3b8",
     tabAnimTo: "#7c00ff",
     tabBorderTo: "#4f46e5",
-    themeColor: "#f8fafc",
+    themeColor: "#6366f1",
     bgColor: "#f8fafc",
     // IS (input style)
     IS_bg: "rgba(0,0,0,0.06)", IS_border: "1px solid rgba(0,0,0,0.09)", IS_color: "#1e293b",
@@ -888,7 +860,30 @@ function App() {
     setMeta("mobile-web-app-capable", "yes");
     setMeta("theme-color", T.themeColor);
     setMeta("application-name", "年休管理");
-    return () => {};
+    // manifest をインラインで注入
+    const manifest = {
+      name: "年休管理",
+      short_name: "年休管理",
+      description: "年次有給休暇 管理アプリ",
+      start_url: window.location.href,
+      display: "standalone",
+      background_color: T.bgColor,
+      theme_color: "#6366f1",
+      icons: [
+        { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#8DB84C"/><text x="96" y="130" font-size="110" text-anchor="middle" font-family="sans-serif">🗓</text></svg>`), sizes: "192x192", type: "image/svg+xml" },
+        { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#8DB84C"/><text x="256" y="350" font-size="300" text-anchor="middle" font-family="sans-serif">🗓</text></svg>`), sizes: "512x512", type: "image/svg+xml" },
+      ],
+    };
+    const blob = new Blob([JSON.stringify(manifest)], {type:"application/json"});
+    const url  = URL.createObjectURL(blob);
+    let link = document.querySelector('link[rel="manifest"]');
+    if (!link) { link = document.createElement("link"); link.rel = "manifest"; document.head.appendChild(link); }
+    link.href = url;
+    // Apple touch icon
+    let icon = document.querySelector('link[rel="apple-touch-icon"]');
+    if (!icon) { icon = document.createElement("link"); icon.rel = "apple-touch-icon"; document.head.appendChild(icon); }
+    icon.href = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" rx="34" fill="#8DB84C"/><text x="90" y="122" font-size="100" text-anchor="middle" font-family="sans-serif">🗓</text></svg>`);
+    return () => URL.revokeObjectURL(url);
   }, []);
 
   useEffect(()=>{ save({wpd,prevH,currH,tDays,entries}); },[wpd,prevH,currH,tDays,entries]);
@@ -2331,8 +2326,6 @@ function App() {
 }
 
   ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
-  /* ヘッダープレースホルダーをReact描画後に即削除 */
-  (function(){ var ph=document.getElementById('header-ph'); if(ph) ph.parentNode.removeChild(ph); })();
 })();
   </script>
 
@@ -2374,12 +2367,6 @@ function installPWA() {
   _installPrompt.userChoice.then(function() { _installPrompt = null; });
 }
 
-// ── Service Worker 登録 ──
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js')
-    .then(function() { console.log('SW registered'); })
-    .catch(function(err) { console.warn('SW registration failed:', err); });
-}
 </script>
 
 </body>
