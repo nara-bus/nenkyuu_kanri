@@ -53,8 +53,35 @@
     body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
     select option{background:var(--select-bg,#f8fafc);color:var(--select-color,#1e293b)}
   </style>
+  <script>
+    /* チラつき防止: Reactより前にダーク背景を確定させる */
+    (function(){
+      var dark = localStorage.getItem('nenkyuu_dark') === '1';
+      var bg   = dark ? '#0f172a' : '#f8fafc';
+      var r = document.documentElement.style;
+      r.setProperty('--bg-root', bg);
+      /* body未生成なのでhtml要素に直接背景を当てる */
+      document.documentElement.style.background = bg;
+    })();
+  </script>
 </head>
 <body>
+  <!-- ヘッダー領域をReact描画前に同色で予約 -->
+  <script>
+    (function(){
+      var dark = localStorage.getItem('nenkyuu_dark') === '1';
+      var bg   = dark ? '#0f172a' : '#f8fafc';
+      document.body.style.background = bg;
+      /* ヘッダー高さ分のプレースホルダーdivを差し込む */
+      var ph = document.createElement('div');
+      ph.id  = 'header-ph';
+      ph.style.cssText = 'position:sticky;top:0;z-index:100;height:60px;'
+        + 'background:' + (dark ? 'rgba(15,23,42,0.85)' : 'rgba(241,245,249,0.92)') + ';'
+        + 'border-bottom:' + (dark ? '1px solid rgba(99,102,241,0.3)' : '1px solid rgba(0,0,0,0.09)') + ';'
+        + 'backdrop-filter:blur(12px);';
+      document.body.appendChild(ph);
+    })();
+  </script>
   <div id="root"></div>
 
   <!-- React 18 + ReactDOM (CDN) -->
@@ -2304,6 +2331,8 @@ function App() {
 }
 
   ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+  /* ヘッダープレースホルダーをReact描画後に即削除 */
+  (function(){ var ph=document.getElementById('header-ph'); if(ph) ph.parentNode.removeChild(ph); })();
 })();
   </script>
 
