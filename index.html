@@ -159,7 +159,7 @@ const THEMES = {
     rc_cardBg: "rgba(0,0,0,0.07)", rc_cardBorder: "1px solid rgba(0,0,0,0.08)",
     rc_innerBorder: "1px solid rgba(0,0,0,0.13)",
     // new entry area
-    ne_bg: "#f8fafc", ne_border: "1px solid rgba(0,0,0,0.09)",
+    ne_bg: "rgba(0,0,0,0.06)", ne_border: "1px solid rgba(0,0,0,0.09)",
     ne_title: "#4f46e5",
     ne_label: "#64748b",
     ne_cancelBg: "rgba(0,0,0,0.06)", ne_cancelBorder: "1px solid rgba(0,0,0,0.09)", ne_cancelColor: "#64748b",
@@ -175,7 +175,7 @@ const THEMES = {
     badgePurple: "#9333ea",
     tabActiveColor: "#7c00ff",
     // cards
-    card_bg: "#ffffff", card_border: "1px solid rgba(0,0,0,0.09)",
+    card_bg: "rgba(0,0,0,0.06)", card_border: "1px solid rgba(0,0,0,0.09)",
     card_shadow: "0 2px 8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06)",
     card_label: "#334155",
     card_label2: "#475569",
@@ -192,7 +192,7 @@ const THEMES = {
     help_listDesc: "#64748b",
     help_accentColor: "#4f46e5",
     // records entry card
-    re_bg: "rgba(0,0,0,0.06)", re_border: "1px solid rgba(0,0,0,0.09)",
+    re_bg: "rgba(0,0,0,0.13)", re_border: "1px solid rgba(0,0,0,0.09)",
     re_dateColor: "#1e293b",
     re_diaColor: "#7c3aed",
     re_noColor: "#000000", re_noBg: "rgba(0,0,0,0.06)",
@@ -1428,14 +1428,14 @@ function App() {
               )
               , hd && (
                 React.createElement('div', { style: { marginTop:12, display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}
-                  , React.createElement('div', { style: { background:T.card_bg, border:"1px solid "+(vsTgt>=0?T.goal_diffBorder_ok:"rgba(248,113,113,0.6)"), borderRadius:12, padding:"8px 10px", boxShadow:T.card_shadow2 }}
+                  , React.createElement('div', { style: { background:isDark?T.card_bg:"rgba(255,255,255,0.4)", border:"1px solid "+(vsTgt>=0?T.goal_diffBorder_ok:"rgba(248,113,113,0.6)"), borderRadius:12, padding:"8px 10px", boxShadow:T.card_shadow2 }}
                     , React.createElement('div', { style: { fontSize:13, color:T.goal_diffLabel }}, "基準時間との差")
                     , React.createElement('div', { style: { fontSize:22, fontWeight:700, color: vsTgt>=0 ? "#00c853" : "#ff69b4" }}
                       , vsTgt>=0?"+":"-", mmHHMM(Math.abs(vsTgt))
                     )
                     , React.createElement('div', { style: { fontSize:12, color:T.hay_baseLabel }}, "基準: " , mmHHMM(tRemMin))
                   )
-                  , React.createElement('div', { style: { background:T.card_bg, border:"1px solid "+(vsMax>=0?T.goal_diffBorder_ok:"rgba(248,113,113,0.6)"), borderRadius:12, padding:"8px 10px", boxShadow:T.card_shadow2 }}
+                  , React.createElement('div', { style: { background:isDark?T.card_bg:"rgba(255,255,255,0.4)", border:"1px solid "+(vsMax>=0?T.goal_diffBorder_ok:"rgba(248,113,113,0.6)"), borderRadius:12, padding:"8px 10px", boxShadow:T.card_shadow2 }}
                     , React.createElement('div', { style: { fontSize:13, color:T.goal_diffLabel }}, "最大ここまで休める！")
                     , React.createElement('div', { style: { fontSize:22, fontWeight:700, color: vsMax>=0 ? "#00c853" : "#ff69b4", display:"flex", alignItems:"center", gap:4 }}
                       , vsMax>=0?"+":"-", mmHHMM(Math.abs(vsMax))
