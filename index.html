@@ -766,8 +766,8 @@ function App() {
     const applyDate = new Date(nearest.date); applyDate.setHours(0,0,0,0);
     const deadline = new Date(applyDate); deadline.setDate(applyDate.getDate() - 7);
     const daysLeft = Math.ceil((deadline - today) / 86400000);
-    return daysLeft;
-  }); // 起動時未提出警告（false=非表示, "confirm"=申請日超過, number=提出期限までの残り日数）
+    return daysLeft > 0 ? daysLeft : "confirm"; // 提出期限切れ(0以下)は確認扱い
+  }); // 起動時未提出警告（false=非表示, "confirm"=要確認, number=提出期限までの残り日数）
   // 年休更新通知: 9月16日以降の初回起動時のみ表示
   const [showRenewalNotice, setShowRenewalNotice] = useState(()=>{
     const now = new Date();
