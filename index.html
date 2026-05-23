@@ -746,7 +746,15 @@ function App() {
   const [showPulseToast, setShowPulseToast] = useState(false);
   const showBlockToast = () => { setShowPulseToast(true); setTimeout(()=>setShowPulseToast(false), 2000); };
 
-  const [showNotice, setShowNotice] = useState(!isFirstVisit); // 起動時注意喚起（初回は抑制）
+  const [showNotice, setShowNotice] = useState(()=>{
+    if(isFirstVisit) return false;
+    // 10日以内に申請日がある未提出エントリが存在する場合のみ表示
+    const todayStr = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD
+    const limitDate = new Date(); limitDate.setDate(limitDate.getDate() + 10);
+    const limitStr = limitDate.toLocaleDateString("sv-SE");
+    const saved = _nullishCoalesce(_optionalChain([sv, 'optionalAccess', _sv0 => _sv0.entries]), () => ( []));
+    return saved.some(e => !e.submitted && e.date >= todayStr && e.date <= limitStr);
+  }); // 起動時未提出警告
   // 年休更新通知: 9月16日以降の初回起動時のみ表示
   const [showRenewalNotice, setShowRenewalNotice] = useState(()=>{
     const now = new Date();
@@ -1920,7 +1928,7 @@ function App() {
                   {label:"番号", desc:"ダイヤ番号をテンキーで入力します。"},
                   {label:"労働時間", desc:"申請する休暇日の労働時間をテンキーで入力します。上限は15時間00分です。"},
                   {label:"前年度→今年度の移行確認", desc:"入力により前年度分が不足する場合、確認ダイアログが表示されます。「承諾」で今年度分への自動移行を確定し、「拒否」で入力をやり直せます。"},
-                  {label:"届出済 / 未提出", desc:"年休届の提出状況を管理できます。タップするたびに切り替わります。届出済は緑色、未提出は赤色で表示されます。"},
+                  {label:"届出済 / 未提出", desc:"年休届の提出状況を管理できます。タップするたびに切り替わります。届出済は緑色、未提出は赤色で表示されます。申請日の10日前から未提出の年休がある場合、起動時に警告が表示されます。"},
                   {label:"✏️ 編集 / 🗑 削除", desc:"登録済みの記録を修正・削除できます。🗑 をタップすると確認ダイアログが表示されます。「削除する」で削除、「キャンセル」で取り消せます。"},
                   {label:"🗑 全削除", desc:"すべての使用記録を一括削除します。タップすると確認ダイアログが表示されます。「削除する」で全件削除、「キャンセル」で取り消せます。"},
                   {label:"使用件数 / 合計", desc:"使用記録の件数と、登録した年休の合計時間が一覧の下部に表示されます。"},
@@ -2272,7 +2280,7 @@ function App() {
           , React.createElement('p', { style: {
             fontSize:15, color:T.modal_renewText, lineHeight:1.85,
             margin:"0 0 24px", letterSpacing:0.3,
-          }}, "年休所得時間と所定労働時間の入力ミス、使用記録の記入漏れがないか確認してください！")
+          }}, "未提出の年休があります。")
           /* 閉じるボタン */
           , React.createElement('div', { style: { display:"flex", justifyContent:"center" }}
             , React.createElement('button', { onClick: ()=>{ vibe(50); setShowNotice(false); }, style: {
