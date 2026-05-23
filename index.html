@@ -768,6 +768,7 @@ function App() {
     const daysLeft = Math.ceil((deadline - today) / 86400000);
     return daysLeft > 0 ? daysLeft : "confirm"; // 提出期限切れ(0以下)は確認扱い
   }); // 起動時未提出警告（false=非表示, "confirm"=要確認, number=提出期限までの残り日数）
+  const [showGeneralNotice, setShowGeneralNotice] = useState(!isFirstVisit); // 従来の起動時注意喚起（初回以外・未提出警告なしの場合に表示）
   // 年休更新通知: 9月16日以降の初回起動時のみ表示
   const [showRenewalNotice, setShowRenewalNotice] = useState(()=>{
     const now = new Date();
@@ -2270,7 +2271,7 @@ function App() {
         )
       )
 
-      /* ─── 起動時注意喚起モーダル ─── */
+      /* ─── 未提出警告モーダル ─── */
       , showNotice && React.createElement('div', { style: {
         position:"fixed", inset:0, zIndex:200,
         background:"rgba(0,0,0,0.65)",
@@ -2297,6 +2298,43 @@ function App() {
           /* 閉じるボタン */
           , React.createElement('div', { style: { display:"flex", justifyContent:"center" }}
             , React.createElement('button', { onClick: ()=>{ vibe(50); setShowNotice(false); }, style: {
+              padding:"8px 28px",
+              background:"linear-gradient(135deg,#f59e0b,#d97706)",
+              border:"none", borderRadius:12,
+              fontSize:13, fontWeight:700, color:"#1a1a1a",
+              cursor:"pointer", letterSpacing:0.5,
+            }}, "閉じる")
+          )
+        )
+      )
+
+      /* ─── 起動時注意喚起モーダル（未提出警告なしの場合のみ） ─── */
+      , showGeneralNotice && !showNotice && React.createElement('div', { style: {
+        position:"fixed", inset:0, zIndex:200,
+        background:"rgba(0,0,0,0.65)",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        padding:"24px",
+      }}
+        , React.createElement('div', { style: {
+          background:T.modal_noticeBg,
+          border:"1.5px solid rgba(251,191,36,0.6)",
+          borderRadius:20, padding:"28px 24px 24px",
+          maxWidth:380, width:"100%",
+          boxShadow:"0 8px 40px rgba(0,0,0,0.6)",
+        }}
+          /* アイコン＋タイトル */
+          , React.createElement('div', { style: { display:"flex", alignItems:"center", gap:10, marginBottom:16 }}
+            , React.createElement('span', { style: { fontSize:28 }}, "⚠️")
+            , React.createElement('span', { style: { fontSize:16, fontWeight:700, color:"#fbbf24", letterSpacing:0.5 }}, "ご確認ください")
+          )
+          /* 本文 */
+          , React.createElement('p', { style: {
+            fontSize:15, color:T.modal_renewText, lineHeight:1.85,
+            margin:"0 0 24px", letterSpacing:0.3,
+          }}, "年休所得時間と所定労働時間の入力ミス、使用記録の記入漏れがないか確認してください！")
+          /* 閉じるボタン */
+          , React.createElement('div', { style: { display:"flex", justifyContent:"center" }}
+            , React.createElement('button', { onClick: ()=>{ vibe(50); setShowGeneralNotice(false); }, style: {
               padding:"8px 28px",
               background:"linear-gradient(135deg,#f59e0b,#d97706)",
               border:"none", borderRadius:12,
