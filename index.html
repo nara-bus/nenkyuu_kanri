@@ -695,7 +695,7 @@ function App() {
       return next;
     });
   };
-  const sv = load();
+  const [sv] = useState(() => load());
 
   // 1日の所定労働時間（分）
   const [wpd,    setWpdRaw]     = useState(_nullishCoalesce(_optionalChain([sv, 'optionalAccess', _2 => _2.wpd]), () => ( DEFAULT_WORK_MIN)));
