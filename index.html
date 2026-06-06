@@ -1396,7 +1396,7 @@ function App() {
               )
               , React.createElement('div', { style: { background: isDark?"rgba(255,255,255,0.2)":"rgba(0,0,0,0.35)", margin:"2px 0" }})
               , React.createElement('div', { style: { paddingLeft:12 }}
-                , React.createElement('div', { style: { fontSize:13, color:T.card_label, marginBottom:4 }}, dayJudge===0 ? (prevRem>=0 ? "前年度分使い切りまでの時間" : "今年度分使い切りまでの時間") : (dayJudge-1)+"日に下がるまでのあと")
+                , React.createElement('div', { style: { fontSize:13, color:T.card_label, marginBottom:4 }}, dayJudge===0 ? (prevRem>=0 ? "前年度分使い切りまでの時間" : "今年度分使い切りまでの時間") : (dayJudge-1)+"日に下がるまであと")
                 , React.createElement('div', { style: { fontSize:26, fontWeight:700, color:"#00c853" }}
                   , mmHHMM(dayJudge===0 ? activeMin : switchMin)
                 )
@@ -1928,7 +1928,7 @@ function App() {
                   {label:"基準時間との差", desc:"目標日数をキープするのに必要な時間と、現在の残り時間との差です。マイナスになると枠が赤く変わります。"},
                   {label:"最大ここまで休める！", desc:"現在の残り時間で最大何時間まで年休を取れるかの目安です。マイナスになると枠が赤く変わります。"},
                   {label:"日数判定", desc:"残り時間から算出した現在の年休残日数と、端数の切捨て・切上げの判定根拠を表示します。"},
-                  {label:"〇〇日に下がるまでのあと", desc:"あと何時間使うと残日数の判定が1日減るかを示します。消化ペースの目安にしてください。"},
+                  {label:"〇〇日に下がるまであと", desc:"あと何時間使うと残日数の判定が1日減るかを示します。消化ペースの目安にしてください。"},
                 ],
               },
               {
