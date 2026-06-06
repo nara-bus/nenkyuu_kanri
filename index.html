@@ -933,7 +933,7 @@ function App() {
 
   const HAYAMI = useMemo(() => buildHayami(wpd), [wpd]);
 
-  const switchMin = remMin<=halfWpd ? remMin : (()=>{ const jd=HAYAMI.find(h=>h.days===(remSub>halfWpd ? dayJudge-1 : dayJudge)); const v=jd ? remMin-jd.judgeMax : 0; return v===0 ? wpd : v; })();
+  const switchMin = remMin<=halfWpd ? remMin : (()=>{ const jd=HAYAMI.find(h=>h.days===(remSub>halfWpd ? dayJudge-1 : dayJudge)); const v=jd ? remMin-jd.judgeMax : 0; return v===0 ? (dayJudge===20 ? wpd-halfWpd : wpd) : v; })();
 
   const hd = HAYAMI.find(h=>h.days===tDays)||null;
   const tRemMin= _nullishCoalesce(_optionalChain([hd, 'optionalAccess', _8 => _8.remainMin]), () => (null));
