@@ -1402,7 +1402,7 @@ function App() {
                   , mmHHMM(dayJudge===0 ? activeMin : switchMin)
                 )
                 , React.createElement('div', { style: { fontSize:12, color:T.fld_label, marginTop:2 }}
-                  , dayJudge===0 ? "年休残時間と同じ値" : "残時間 − 境界値"
+                  , (()=>{ const jd=HAYAMI.find(h=>h.days===dayJudge); return "境界値　"+mmHHMM(jd ? jd.maxMin-1 : 0); })()
                 )
               )
             )
