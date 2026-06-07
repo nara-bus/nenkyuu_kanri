@@ -933,7 +933,7 @@ function App() {
 
   const HAYAMI = useMemo(() => buildHayami(wpd), [wpd]);
 
-  const switchMin = remMin<=halfWpd ? remMin : remSub>halfWpd ? remSub-halfWpd : halfWpd-remSub+1;
+  const switchMin = (()=>{ if(remMin<=halfWpd) return remMin; const jd=HAYAMI.find(h=>h.days===dayJudge); const v=jd ? remMin-jd.maxMin+1 : 0; return v<=0 ? wpd : v; })();
 
   const hd = HAYAMI.find(h=>h.days===tDays)||null;
   const tRemMin= _nullishCoalesce(_optionalChain([hd, 'optionalAccess', _8 => _8.remainMin]), () => (null));
@@ -1402,7 +1402,7 @@ function App() {
                   , mmHHMM(dayJudge===0 ? activeMin : switchMin)
                 )
                 , React.createElement('div', { style: { fontSize:12, color:T.fld_label, marginTop:2 }}
-                  , dayJudge===0 ? "年休残時間と同じ値" : remSub>halfWpd?"端数 − 半日":"端数 + 半日"
+                  , dayJudge===0 ? "年休残時間と同じ値" : "残時間 − 境界値"
                 )
               )
             )
