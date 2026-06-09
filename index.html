@@ -1806,7 +1806,7 @@ function App() {
             )
 
             /* カードリスト：ヘッダー(~68px)+タブ(~45px)+インジケーター(~26px)+padding(32px)+凡例(~36px)+gap(8px) ≈ 215px */
-            , React.createElement('div', { ref: hayamiScrollRef, style: { overflowY:"auto", height:"calc(100vh - 270px)", display:"flex", flexDirection:"column", gap:6 },
+            , React.createElement('div', { ref: hayamiScrollRef, style: { overflowY:"auto", maxHeight:"calc(100vh - 270px)", display:"flex", flexDirection:"column", gap:6 },
               onTouchStart: e=>{
                 e.stopPropagation();
                 const t=e.touches[0];
