@@ -49,7 +49,7 @@
     }
     .ob-pulse { animation: ob-pulse 1.2s ease-in-out infinite; }
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body,#root{height:100%;background:var(--bg-root,#0f172a)}
+    html,body,#root{height:100%;background:var(--bg-root,#f8fafc)}
     body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
     select option{background:var(--select-bg,#f8fafc);color:var(--select-color,#1e293b)}
   </style>
@@ -355,6 +355,7 @@ function applyThemeCSSVars(isDark) {
   // theme-color meta
   let mc = document.querySelector('meta[name="theme-color"]');
   if(mc) mc.setAttribute('content', T.themeColor);
+  document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
 }
 // 起動時に保存済みテーマを即時適用（チラつき防止）
 (function(){ const d=localStorage.getItem('nenkyuu_dark')==='1'; applyThemeCSSVars(d); })();
