@@ -1186,7 +1186,7 @@ function App() {
 
 
 
-      , React.createElement('div', { style: { padding:"16px", paddingBottom:80, overflow: (tab==="hayami"||tab==="help") ? "hidden" : undefined, minHeight:"100vh" }, onTouchStart: handleTouchStart, onTouchEnd: handleTouchEnd}
+      , React.createElement('div', { style: { padding:"16px", paddingBottom:80, overflow: (tab==="hayami"||tab==="help") ? "hidden" : undefined, ...(tab==="hayami" ? {display:"flex",flexDirection:"column"} : {}) }, onTouchStart: handleTouchStart, onTouchEnd: handleTouchEnd}
 
         /* ════ MAIN TAB ════ */
         , tab==="main" && (
@@ -1807,7 +1807,7 @@ function App() {
             )
 
             /* カードリスト：ヘッダー(~68px)+タブ(~45px)+インジケーター(~26px)+padding(32px)+凡例(~36px)+gap(8px) ≈ 215px */
-            , React.createElement('div', { ref: hayamiScrollRef, style: { overflowY:"auto", height:"calc(100vh - 270px)", display:"flex", flexDirection:"column", gap:6 },
+            , React.createElement('div', { ref: hayamiScrollRef, style: { overflowY:"auto", flexGrow:1, display:"flex", flexDirection:"column", gap:6 },
               onTouchStart: e=>{
                 e.stopPropagation();
                 const t=e.touches[0];
@@ -1893,7 +1893,7 @@ function App() {
 
         /* ════ HELP TAB ════ */
         , tab==="help" && (
-          React.createElement('div', { style: { overflowY:"auto", height:"calc(100vh - 195px)", display:"flex", flexDirection:"column", gap:14, paddingBottom:24 },
+          React.createElement('div', { style: { overflowY:"auto", flexGrow:1, display:"flex", flexDirection:"column", gap:14, paddingBottom:24 },
             onTouchStart: e=>{ e.stopPropagation(); const t=e.touches[0]; e.currentTarget._sx=t.clientX; e.currentTarget._sy=t.clientY; },
             onTouchEnd: e=>{ e.stopPropagation(); const sx=e.currentTarget._sx,sy=e.currentTarget._sy; if(sx==null)return; const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy; e.currentTarget._sx=null; if(Math.abs(dx)>=50&&Math.abs(dx)>Math.abs(dy)){ const idx=TABS.indexOf(tab); const next=dx<0?TABS[Math.min(idx+1,TABS.length-1)]:TABS[Math.max(idx-1,0)]; if(!allPulseOff && next!=='main'){ showBlockToast(); return; } setTab(prev=>{ setTimeout(()=>setAnimatingTab(next),30); return next; }); } }}
 
