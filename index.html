@@ -691,7 +691,7 @@ function App() {
     setIsDark(d => {
       const next = !d;
       localStorage.setItem('nenkyuu_dark', next ? '1' : '0');
-      applyThemeCSSVars(next);
+      requestAnimationFrame(() => applyThemeCSSVars(next));
       return next;
     });
   };
