@@ -1051,12 +1051,14 @@ function App() {
   useEffect(() => {
     if (tab !== "hayami") return;
     const frame = requestAnimationFrame(() => {
-      if (judgeRowRef.current && hayamiScrollRef.current) {
-        const container = hayamiScrollRef.current;
-        const row       = judgeRowRef.current;
-        const offset    = row.offsetTop - container.offsetTop - container.clientHeight / 2 + row.clientHeight / 2;
-        container.scrollTo({ top: Math.max(0, offset), behavior: "smooth" });
-      }
+      requestAnimationFrame(() => {
+        if (judgeRowRef.current && hayamiScrollRef.current) {
+          const container = hayamiScrollRef.current;
+          const row       = judgeRowRef.current;
+          const offset    = row.offsetTop - container.offsetTop - container.clientHeight / 2 + row.clientHeight / 2;
+          container.scrollTo({ top: Math.max(0, offset), behavior: "smooth" });
+        }
+      });
     });
     return () => cancelAnimationFrame(frame);
   }, [tab, dayJudge]);
@@ -1893,7 +1895,7 @@ function App() {
 
         /* ════ HELP TAB ════ */
         , tab==="help" && (
-          React.createElement('div', { style: { overflowY:"auto", flexGrow:1, display:"flex", flexDirection:"column", gap:14, paddingBottom:24 },
+          React.createElement('div', { style: { overflowY:"auto", flexGrow:1, display:"flex", flexDirection:"column", gap:14, paddingBottom:80 },
             onTouchStart: e=>{ e.stopPropagation(); const t=e.touches[0]; e.currentTarget._sx=t.clientX; e.currentTarget._sy=t.clientY; },
             onTouchEnd: e=>{ e.stopPropagation(); const sx=e.currentTarget._sx,sy=e.currentTarget._sy; if(sx==null)return; const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy; e.currentTarget._sx=null; if(Math.abs(dx)>=50&&Math.abs(dx)>Math.abs(dy)){ const idx=TABS.indexOf(tab); const next=dx<0?TABS[Math.min(idx+1,TABS.length-1)]:TABS[Math.max(idx-1,0)]; if(!allPulseOff && next!=='main'){ showBlockToast(); return; } setTab(prev=>{ setTimeout(()=>setAnimatingTab(next),30); return next; }); } }}
 
