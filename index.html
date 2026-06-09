@@ -355,7 +355,6 @@ function applyThemeCSSVars(isDark) {
   // theme-color meta
   let mc = document.querySelector('meta[name="theme-color"]');
   if(mc) mc.setAttribute('content', T.themeColor);
-  document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
 }
 // 起動時に保存済みテーマを即時適用（チラつき防止）
 (function(){ const d=localStorage.getItem('nenkyuu_dark')==='1'; applyThemeCSSVars(d); })();
@@ -1051,14 +1050,12 @@ function App() {
   useEffect(() => {
     if (tab !== "hayami") return;
     const frame = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (judgeRowRef.current && hayamiScrollRef.current) {
-          const container = hayamiScrollRef.current;
-          const row       = judgeRowRef.current;
-          const offset    = row.offsetTop - container.offsetTop - container.clientHeight / 2 + row.clientHeight / 2;
-          container.scrollTo({ top: Math.max(0, offset), behavior: "smooth" });
-        }
-      });
+      if (judgeRowRef.current && hayamiScrollRef.current) {
+        const container = hayamiScrollRef.current;
+        const row       = judgeRowRef.current;
+        const offset    = row.offsetTop - container.offsetTop - container.clientHeight / 2 + row.clientHeight / 2;
+        container.scrollTo({ top: Math.max(0, offset), behavior: "smooth" });
+      }
     });
     return () => cancelAnimationFrame(frame);
   }, [tab, dayJudge]);
@@ -1809,7 +1806,7 @@ function App() {
             )
 
             /* カードリスト：ヘッダー(~68px)+タブ(~45px)+インジケーター(~26px)+padding(32px)+凡例(~36px)+gap(8px) ≈ 215px */
-            , React.createElement('div', { ref: hayamiScrollRef, style: { overflowY:"auto", maxHeight:"calc(100vh - 310px)", display:"flex", flexDirection:"column", gap:6 },
+            , React.createElement('div', { ref: hayamiScrollRef, style: { overflowY:"auto", height:"calc(100vh - 270px)", display:"flex", flexDirection:"column", gap:6 },
               onTouchStart: e=>{
                 e.stopPropagation();
                 const t=e.touches[0];
