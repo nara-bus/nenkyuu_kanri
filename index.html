@@ -691,7 +691,7 @@ function App() {
     setIsDark(d => {
       const next = !d;
       localStorage.setItem('nenkyuu_dark', next ? '1' : '0');
-      requestAnimationFrame(() => applyThemeCSSVars(next));
+      applyThemeCSSVars(next);
       return next;
     });
   };
@@ -1185,7 +1185,7 @@ function App() {
 
 
 
-      , React.createElement('div', { style: { padding:"16px", paddingBottom: tab==="main" ? 16 : 80, overflow: (tab==="hayami"||tab==="help"||tab==="records") ? "hidden" : undefined, minHeight: tab==="main" ? "auto" : "100vh" }, onTouchStart: handleTouchStart, onTouchEnd: handleTouchEnd}
+      , React.createElement('div', { style: { padding:"16px", paddingBottom: tab==="main" ? 16 : 80, overflow: (tab==="hayami"||tab==="help"||tab==="records") ? "hidden" : undefined }, onTouchStart: handleTouchStart, onTouchEnd: handleTouchEnd}
 
         /* ════ MAIN TAB ════ */
         , tab==="main" && (
