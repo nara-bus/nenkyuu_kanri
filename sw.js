@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nenkyu-v1';
+const CACHE_NAME = 'nenkyu-20261021-001';
 const ASSETS = [
   './',
   './index.html',

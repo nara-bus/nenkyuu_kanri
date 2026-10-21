@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BNRJZCXXWN"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-BNRJZCXXWN');
-</script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -982,24 +974,7 @@ function App() {
     const now = new Date();
     const fname = `年休_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}.json`;
     const data = JSON.stringify({wpd,prevH,currH,tDays,entries}, null, 2);
-    // showSaveFilePicker対応ブラウザ（Chrome等・HTTPS環境）
-    if(window.showSaveFilePicker){
-      try{
-        const fh = await window.showSaveFilePicker({
-          suggestedName: fname,
-          types:[{description:"JSONファイル",accept:{"application/json":[".json"]}}]
-        });
-        const writable = await fh.createWritable();
-        await writable.write(data);
-        await writable.close();
-        setFlash(true); setTimeout(()=>setFlash(false),1800);
-        return;
-      }catch(e){
-        if(e.name==="AbortError") return; // キャンセルは何もしない
-        // SecurityError等はフォールバックへ
-      }
-    }
-    // フォールバック（Safari・ローカルファイル等）
+    // ダウンロードフォルダへ直接保存
     const blob = new Blob([data], {type:"application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
