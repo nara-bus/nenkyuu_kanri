@@ -713,6 +713,7 @@ function App() {
   const [importError,   setImportError]   = useState(false); // インポートエラーモーダル用
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [flash,    setFlash]    = useState(false);
+  const [saveModal, setSaveModal] = useState(null); // 保存確認モーダル用（ファイル名を保持）
   const [pad,      setPad]      = useState(null);
   const [infoPopup, setInfoPopup] = useState(null); // {title, desc}
 
@@ -970,9 +971,11 @@ function App() {
     setFlash(true); setTimeout(()=>setFlash(false),1800);
   };
 
-  const exportData = async () => {
+  const makeExportName = () => {
     const now = new Date();
-    const fname = `年休_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}.json`;
+    return `年休_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}.json`;
+  };
+  const exportData = async (fname) => {
     const data = JSON.stringify({wpd,prevH,currH,tDays,entries}, null, 2);
     // ダウンロードフォルダへ直接保存
     const blob = new Blob([data], {type:"application/json"});
@@ -1118,7 +1121,7 @@ function App() {
               }, isDark ? "🌙" : "☀️")
           )
           , React.createElement('div', { style: { display:"flex", alignItems:"center", gap:6 }}
-            , React.createElement('button', { onClick: ()=>{ if(!allPulseOff && tab!=='help'){ showBlockToast(); return; } exportData(); }, title: "JSONでエクスポート",
+            , React.createElement('button', { onClick: ()=>{ if(!allPulseOff && tab!=='help'){ showBlockToast(); return; } setSaveModal(makeExportName()); }, title: "JSONでエクスポート",
               onPointerDown: e=>{ e.currentTarget.style.boxShadow="inset 0 2px 4px rgba(0,0,0,0.3)"; e.currentTarget.style.transform="translateY(2px)"; e.currentTarget.style.background="linear-gradient(180deg,rgba(180,110,0,0.35) 0%,rgba(255,160,0,0.2) 100%)"; },
               onPointerUp:   e=>{ e.currentTarget.style.boxShadow="0 2px 0 rgba(180,110,0,0.4), 0 4px 6px rgba(255,160,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="linear-gradient(180deg,rgba(255,180,0,0.22) 0%,rgba(255,160,0,0.1) 100%)"; },
               onPointerLeave:e=>{ e.currentTarget.style.boxShadow="0 2px 0 rgba(180,110,0,0.4), 0 4px 6px rgba(255,160,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.background="linear-gradient(180deg,rgba(255,180,0,0.22) 0%,rgba(255,160,0,0.1) 100%)"; },
@@ -2080,6 +2083,38 @@ function App() {
                 borderRadius:10, color:T.modal_cancelColor, fontSize:14, fontWeight:600, cursor:"pointer",
                 transition:"all 0.12s ease",
               }}, "キャンセル")
+          )
+        )
+      )
+      /* ─── 保存確認モーダル ─── */
+      , saveModal && React.createElement('div', { style: {
+        position:"fixed", inset:0, zIndex:500,
+        background:"rgba(0,0,0,0.65)",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        padding:"24px",
+      }}
+        , React.createElement('div', { style: {
+          background:T.modal_bg, border:T.modal_border,
+          borderRadius:16, padding:"24px", maxWidth:320, width:"100%",
+          boxShadow:"0 8px 40px rgba(0,0,0,0.6)",
+        }}
+          , React.createElement('div', { style: { fontSize:15, fontWeight:700, color:T.modal_title, marginBottom:12, textAlign:"center" }}, "💾 データを保存")
+          , React.createElement('div', { style: { fontSize:13, color:T.modal_infoDesc, marginBottom:14, lineHeight:1.7 }}
+            , React.createElement('div', { style: { fontWeight:700, marginBottom:4, wordBreak:"break-all" }}, saveModal)
+            , "「保存する」を押すと「ダウンロード」フォルダに保存されます。"
+          )
+          , React.createElement('div', { style: { display:"flex", gap:10, marginTop:8 }}
+            , React.createElement('button', { onClick: ()=>{ vibe(30); setSaveModal(null); }, style: {
+                flex:1, padding:"10px",
+                background:T.modal_cancelBg, border:T.modal_cancelBorder,
+                borderRadius:10, color:T.modal_cancelColor, fontSize:14, fontWeight:600, cursor:"pointer",
+              }}, "キャンセル")
+            , React.createElement('button', { onClick: ()=>{ vibe(50); exportData(saveModal); setSaveModal(null); }, style: {
+                flex:2, padding:"10px",
+                background:"linear-gradient(180deg,#ffb300 0%,#ffa000 100%)",
+                border:"1px solid #ff8f00",
+                borderRadius:10, color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer",
+              }}, "保存する")
           )
         )
       )
